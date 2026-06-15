@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust - Login</title>
+    <style>
+        /* === GLOBAL RESET & LAYOUT === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* === LEFT SIDE: ARTWORK BACKGROUND === */
+        .art-panel {
+            flex: 1;
+            background-image: url('artwork.jpg'); /* Ensure artwork.jpg is inside your public/ folder */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .art-panel h1 {
+            color: white;
+            font-size: 3rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            font-weight: 300;
+            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* === RIGHT SIDE: FORM CONTEXT PANEL === */
+        .form-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 40px;
+            position: relative;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-wrapper h2 {
+            font-size: 2.2rem;
+            color: #000000;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* === INPUT STYLING === */
+        .input-group {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 1rem;
+            color: #333;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            outline: none;
+            background: transparent;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-bottom: 2px solid #0b1953;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            font-size: 1rem;
+            color: #999;
+            pointer-events: none;
+            transition: 0.3s ease all;
+        }
+
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label {
+            top: -15px;
+            font-size: 0.8rem;
+            color: #0b1953;
+        }
+
+        .forgot-password {
+            position: absolute;
+            right: 0;
+            top: 10px;
+            font-size: 0.8rem;
+            color: #0b1953;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* === BUTTONS === */
+        .submit-btn {
+            width: 100%;
+            background-color: #0b1953;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #1a2a6c;
+        }
+
+        /* === REDIRECT CAPTIONS === */
+        .redirect-text {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .redirect-text a {
+            color: #0b1953;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        /* === ALERTS & MESSAGES === */
+        .alert-msg {
+            color: #d9534f;
+            background-color: #fdf2f2;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .art-panel { flex: 0.3; }
+            .form-panel { flex: 0.7; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="art-panel">
+            <h1>Welcome</h1>
+        </div>
+
+        <div class="form-panel">
+            <div class="form-wrapper">
+                
+                <p id="alertMessage" class="alert-msg"></p>
+                
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <input type="text" id="loginUsername" required>
+                        <label>Username</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="loginPassword" required>
+                        <label>Password</label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+
+                <p class="redirect-text">
+                    Don't have an account? <a href="/signup.html">Sign up</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const alertMessage = document.getElementById('alertMessage');
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            alertMessage.style.display = 'none';
+
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Correct Credentials -> Save JWT and open the Travel Dashboard
+                    localStorage.setItem('wanderlust_jwt_token', data.token);
+                    window.location.href = '/index.html';
+                } else {
+                    // Trigger custom message if user is not in database or password fails
+                    if (response.status === 401 || data.error.includes("Invalid")) {
+                        alertMessage.innerHTML = `⚠️ No users found matching those credentials.<br>Please click <strong>Sign up</strong> below to register.`;
+                    } else {
+                        alertMessage.textContent = data.error || "Login Error.";
+                    }
+                    alertMessage.style.display = 'block';
+                }
+            } catch (err) {
+                alertMessage.textContent = "Unable to reach database connection server.";
+                alertMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
