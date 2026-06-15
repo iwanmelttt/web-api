@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust - Sign Up</title>
+    <style>
+        /* === GLOBAL RESET & LAYOUT === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            background-color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            width: 100vw;
+        }
+
+        /* === LEFT SIDE: ARTWORK BACKGROUND === */
+        .art-panel {
+            flex: 1;
+            background-image: url('artwork.jpg'); /* Ensure artwork.jpg is inside your public/ folder */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .art-panel h1 {
+            color: white;
+            font-size: 3rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            font-weight: 300;
+            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* === RIGHT SIDE: FORM PANEL === */
+        .form-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 40px;
+            position: relative;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-wrapper h2 {
+            font-size: 2.2rem;
+            color: #000000;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* === INPUT STYLING === */
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 1rem;
+            color: #333;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            outline: none;
+            background: transparent;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-bottom: 2px solid #0b1953;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            font-size: 1rem;
+            color: #999;
+            pointer-events: none;
+            transition: 0.3s ease all;
+        }
+
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label {
+            top: -15px;
+            font-size: 0.8rem;
+            color: #0b1953;
+        }
+
+        /* === SPECIAL PHONE INPUT GROUP WITH DYNAMIC DROPDOWN === */
+        .phone-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #ccc;
+            align-items: center;
+            position: relative;
+        }
+
+        .phone-group select {
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 10px 0;
+            font-size: 0.95rem;
+            color: #333;
+            cursor: pointer;
+            border-right: 1px solid #eee;
+            padding-right: 5px;
+            max-width: 160px; /* Keeps dropdown compact */
+        }
+
+        .phone-group input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 10px 0;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .phone-label {
+            position: absolute;
+            top: -15px;
+            left: 0;
+            font-size: 0.8rem;
+            color: #0b1953;
+        }
+
+        /* === BUTTONS === */
+        .submit-btn {
+            width: 100%;
+            background-color: #0b1953;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #1a2a6c;
+        }
+
+        /* === REDIRECT CAPTIONS === */
+        .redirect-text {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .redirect-text a {
+            color: #0b1953;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        /* === ALERTS & MESSAGES === */
+        .alert-msg {
+            color: #d9534f;
+            background-color: #fdf2f2;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .art-panel { display: none; }
+            .form-panel { flex: 1; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="art-panel">
+            <h1>Welcome</h1>
+        </div>
+
+        <div class="form-panel">
+            <div class="form-wrapper">
+                <p id="alertMessage" class="alert-msg"></p>
+                
+                <h2>Sign Up</h2>
+                <form id="signupForm">
+                    <div class="input-group">
+                        <input type="text" id="fullName" required>
+                        <label>Full Name</label>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="text" id="identityNumber" required>
+                        <label>IC / Passport Number</label>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="email" id="email" required>
+                        <label>Email Address</label>
+                    </div>
+
+                    <div class="phone-group">
+                        <span class="phone-label">Phone Number</span>
+                        <select id="countryCode" required>
+                            <option value="" disabled selected>Loading...</option>
+                        </select>
+                        <input type="tel" id="phoneNumber" placeholder="123456789" required>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="text" id="signupUsername" required>
+                        <label>Choose Username</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="signupPassword" required>
+                        <label>Create Password</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+
+                <p class="redirect-text">
+                    Already have an account? <a href="/login.html">Log In</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const alertMessage = document.getElementById('alertMessage');
+        const countryDropdown = document.getElementById('countryCode');
+
+        // === API INTEGRATION: FETCH COUNTRIES ON PAGE LOAD ===
+        async function fetchCountryCodes() {
+            try {
+                const response = await fetch('https://restcountries.com/v3.1/all?fields=name,idd,flag,cca2');
+                if (!response.ok) throw new Error("Failed to load country codes");
+                
+                const countries = await response.json();
+
+                // 1. Process data to extract valid dial codes and sort alphabetically
+                const formattedCountries = countries
+                    .filter(c => c.idd && c.idd.root) // Filter out regions without dial codes
+                    .map(c => {
+                        const root = c.idd.root;
+                        const suffix = c.idd.suffixes ? c.idd.suffixes[0] : "";
+                        return {
+                            name: c.name.common,
+                            flag: c.flag || "",
+                            code: root + suffix,
+                            cca2: c.cca2
+                        };
+                    })
+                    .sort((a, b) => a.name.localeCompare(b.name)); // Sort A to Z
+
+                // 2. Build the option elements dynamically
+                countryDropdown.innerHTML = ''; // Clear out "Loading..." option
+                
+                // Set up a default option (e.g., Malaysia or blank selection indicator)
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = "";
+                defaultOpt.disabled = true;
+                defaultOpt.selected = true;
+                defaultOpt.textContent = "Select Code";
+                countryDropdown.appendChild(defaultOpt);
+
+                formattedCountries.forEach(country => {
+                    const option = document.createElement('option');
+                    // Storing the calling code as the output value
+                    option.value = country.code; 
+                    option.textContent = `${country.flag} ${country.cca2} (${country.code})`;
+                    option.title = country.name; // Shows full name when hovered
+                    
+                    // Optional Quality of Life: Auto-select Malaysia (+60) as initial default if found
+                    if(country.cca2 === "MY") {
+                        option.selected = true;
+                        defaultOpt.selected = false;
+                    }
+
+                    countryDropdown.appendChild(option);
+                });
+
+            } catch (err) {
+                console.error(err);
+                countryDropdown.innerHTML = '<option value="+60">🇲🇾 MY (+60)</option>'; // Secure local fallback
+            }
+        }
+
+        // Fire off the API call immediately when the page loads
+        fetchCountryCodes();
+
+        // === REGISTRATION PIPELINE HANDLING ===
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            alertMessage.style.display = 'none';
+
+            const fullName = document.getElementById('fullName').value;
+            const identityNumber = document.getElementById('identityNumber').value;
+            const email = document.getElementById('email').value;
+            
+            // Extract selected calling code and append user's local digits
+            const selectedCode = countryDropdown.value;
+            if(!selectedCode) {
+                alertMessage.textContent = "Please select a valid country calling code.";
+                alertMessage.style.display = 'block';
+                return;
+            }
+            const fullPhone = selectedCode + " " + document.getElementById('phoneNumber').value;
+            
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName, identityNumber, email, phone: fullPhone, username, password })
+                });
+                
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert("Account setup completed successfully! Redirecting you to login.");
+                    window.location.href = '/login.html';
+                } else {
+                    alertMessage.textContent = data.error || "Registration validation failed.";
+                    alertMessage.style.display = 'block';
+                }
+            } catch (err) {
+                alertMessage.textContent = "Server connection configuration error.";
+                alertMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
